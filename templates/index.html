@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>PDF Studio Pro</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="page">
+    <header><h1>PDF Studio Pro ✨</h1><p>Merge · Split · Convert · Extract · Compress</p></header>
+    <main class="grid">
+      <section class="card">
+        <h2>Merge PDFs</h2>
+        <div class="drop" data-target="merge">
+          <p>Drop PDFs or click</p>
+          <form action="/merge" method="post" enctype="multipart/form-data">
+            <input type="file" name="pdfs" multiple accept=".pdf" required>
+            <button>Merge</button>
+          </form>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Images → PDF</h2>
+        <div class="drop" data-target="img2pdf">
+          <p>Drop images or click</p>
+          <form action="/img_to_pdf" method="post" enctype="multipart/form-data">
+            <input type="file" name="images" multiple accept="image/*" required>
+            <button>Convert</button>
+          </form>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Split PDF</h2>
+        <form action="/split" method="post" enctype="multipart/form-data" class="forms">
+          <input type="file" name="pdf" accept=".pdf" required>
+          <input type="text" name="ranges" placeholder="e.g. 1-3,5,7">
+          <button>Split</button>
+        </form>
+      </section>
+
+      <section class="card">
+        <h2>Extract Text</h2>
+        <form action="/extract" method="post" enctype="multipart/form-data">
+          <input type="file" name="pdf" accept=".pdf" required>
+          <button>Extract</button>
+        </form>
+      </section>
+
+      <section class="card">
+        <h2>PDF → Images</h2>
+        <form action="/pdf_to_images" method="post" enctype="multipart/form-data">
+          <input type="file" name="pdf" accept=".pdf" required>
+          <label>Format:
+            <select name="fmt">
+              <option value="png">PNG</option>
+              <option value="jpg">JPG</option>
+            </select>
+          </label>
+          <button>Convert</button>
+        </form>
+      </section>
+
+      <section class="card">
+        <h2>Compress to target KB</h2>
+        <form action="/compress_kb" method="post" enctype="multipart/form-data">
+          <input type="file" name="file" accept="application/pdf,image/*" required>
+          <input type="number" name="target_kb" placeholder="Target size (KB)" min="20" value="300">
+          <button>Compress</button>
+        </form>
+        <small class="hint">Aggressive PDF compression uses server-side poppler/pdf2image if available.</small>
+      </section>
+    </main>
+
+    <footer>Made with code & caffeine — Ayush · IIT Mandi</footer>
+  </div>
+
+<script>
+document.querySelectorAll('.drop').forEach(zone=>{
+  zone.addEventListener('click', ()=> zone.querySelector('input[type=file]').click());
+  zone.addEventListener('dragover', e=>{ e.preventDefault(); zone.classList.add('over'); });
+  zone.addEventListener('dragleave', ()=> zone.classList.remove('over'));
+  zone.addEventListener('drop', e=> {
+    e.preventDefault(); zone.classList.remove('over');
+    const files = e.dataTransfer.files;
+    const input = zone.querySelector('input[type=file]');
+    const dt = new DataTransfer();
+    for(let i=0;i<files.length;i++) dt.items.add(files[i]);
+    input.files = dt.files;
+  });
+});
+</script>
+</body>
+</html>
