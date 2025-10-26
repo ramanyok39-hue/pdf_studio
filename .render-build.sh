@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
-# install system deps
-apt-get update && apt-get install -y qpdf libqpdf-dev
-# now install python deps
+set -o errexit  # Stop on first error
+
+echo "🔥 Installing system dependencies..."
+apt-get update && apt-get install -y qpdf libqpdf-dev poppler-utils
+
+echo "🚀 Upgrading pip and installing Python deps..."
+pip install --upgrade pip
 pip install -r requirements.txt
+
+echo "✅ Build complete!"
